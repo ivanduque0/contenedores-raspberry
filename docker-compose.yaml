@@ -28,4 +28,6 @@ services:
          - .env.pines
       
       restart: always
-
+      
+      depends_on:
+         - stream
