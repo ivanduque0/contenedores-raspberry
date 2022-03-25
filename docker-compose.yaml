@@ -22,7 +22,7 @@ services:
          - /dev/gpiomem
 
       volumes:
-         - ~/dockerpinesraspberry:/app
+         - ~/contenedores-raspberry:/app
       
       env_file:
          - .env.pines
