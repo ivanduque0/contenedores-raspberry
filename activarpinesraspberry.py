@@ -13,7 +13,7 @@ while True:
     # Se configuran los pines
     if pines==0:
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(3, GPIO.OUT)
+        GPIO.setup(7, GPIO.OUT)
         GPIO.setup(5, GPIO.OUT)
         GPIO.setwarnings(False)
         pines=1
@@ -34,17 +34,17 @@ while True:
 
             if led_onoff[0][0] == 1:
                 print("si reconocio")
-                GPIO.output(3, True)
+                GPIO.output(5, True)
                 time.sleep(tiempo)
-                GPIO.output(3, False)
+                GPIO.output(5, False)
                 cursor.execute('''UPDATE led SET onoff=0 WHERE onoff=1;''')
                 conn.commit()
 
             if led_onoff[0][0]==2:
                 print("no reconocio")
-                GPIO.output(5, True)
+                GPIO.output(7, True)
                 time.sleep(tiempo)
-                GPIO.output(5, False)
+                GPIO.output(7, False)
                 cursor.execute('''UPDATE led SET onoff=0 WHERE onoff=2;''')
                 conn.commit()
 
