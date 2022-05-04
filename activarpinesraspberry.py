@@ -8,6 +8,9 @@ GPIO.cleanup()
 tiempo = 2 #Time interval in Seconds
 total=0
 pines=0
+#totalsensor=0
+#t2sensor=0
+#t1sensor=0
 while True:
     conn = None
     # Se configuran los pines
@@ -15,6 +18,8 @@ while True:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(7, GPIO.OUT)
         GPIO.setup(5, GPIO.OUT)
+        # entrada de la senal del sensor
+        # GPIO.setup(12, GPIO.IN)
         GPIO.setwarnings(False)
         pines=1
     t1=time.perf_counter()
@@ -31,6 +36,32 @@ while True:
         while True:
             cursor.execute('SELECT * FROM led')
             led_onoff = cursor.fetchall()
+            # DESCOMENTAR ESTAS LINEAS DE ABAJO SI SE VA A USAR UN SENSOR DE PRESENCIA PARA ACTIVAR LA CAMARAS
+            # cursor.execute('SELECT * FROM sensor')
+            # sensor_onoff = cursor.fetchall() 
+            # print(sensor_onoff)
+            # print(totalsensor)
+
+            # if sensor_onoff[0][0] == 1:
+            #     t2sensor=time.perf_counter()
+            
+            # if t1sensor > 0:
+            #     totalsensor=t2sensor-t1sensor
+
+            # if t1sensor == 0 and sensor_onoff[0][0] == 1:
+            #     t1sensor=time.perf_counter() 
+
+            # if GPIO.input(12) and sensor_onoff[0][0] == 0:
+            #     cursor.execute('''UPDATE sensor SET onoff=1 WHERE onoff=0;''')
+            #     conn.commit()
+            #     t1sensor=time.perf_counter()
+         
+            # if totalsensor > 3:
+            #     cursor.execute('''UPDATE sensor SET onoff=0 WHERE onoff=1;''')
+            #     conn.commit()
+            #     t1sensor=0
+            #     t2sensor=0
+            #     totalsensor=0
 
             if led_onoff[0][0] == 1:
                 print("si reconocio")
