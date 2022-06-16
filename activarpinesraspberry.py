@@ -5,12 +5,12 @@ import os
 
 GPIO.cleanup()
 # Tiempo de encendido
-tiempo = 2 #Time interval in Seconds
+tiempo = 1 #Time interval in Seconds
 total=0
 pines=0
-#totalsensor=0
-#t2sensor=0
-#t1sensor=0
+t2sensor=0
+t1sensor=0
+totalsensor=0
 while True:
     conn = None
     # Se configuran los pines
@@ -18,15 +18,18 @@ while True:
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(7, GPIO.OUT)
         GPIO.setup(5, GPIO.OUT)
-        # entrada de la senal del sensor
-        # GPIO.setup(12, GPIO.IN)
+        GPIO.setup(12, GPIO.IN)
+
+        GPIO.setup(26, GPIO.OUT)
+        buzzer=GPIO.PWM(26,700)
+
         GPIO.setwarnings(False)
         pines=1
     t1=time.perf_counter()
     while total<=5:
         t2=time.perf_counter()
         total=t2-t1
-    try:  
+    try:
         conn = psycopg2.connect(
             database=os.environ.get("SQL_DATABASE"), user=os.environ.get("SQL_USER"), password=os.environ.get("SQL_PASSWORD"), host=os.environ.get("SQL_HOST"), port=os.environ.get("SQL_PORT")
         )
@@ -34,47 +37,58 @@ while True:
         cursor = conn.cursor()
 
         while True:
+
             cursor.execute('SELECT * FROM led')
             led_onoff = cursor.fetchall()
-            # DESCOMENTAR ESTAS LINEAS DE ABAJO SI SE VA A USAR UN SENSOR DE PRESENCIA PARA ACTIVAR LA CAMARAS
-            # cursor.execute('SELECT * FROM sensor')
-            # sensor_onoff = cursor.fetchall() 
-            # print(sensor_onoff)
-            # print(totalsensor)
-
-            # if sensor_onoff[0][0] == 1:
-            #     t2sensor=time.perf_counter()
-            
-            # if t1sensor > 0:
-            #     totalsensor=t2sensor-t1sensor
-
-            # if t1sensor == 0 and sensor_onoff[0][0] == 1:
-            #     t1sensor=time.perf_counter() 
-
-            # if GPIO.input(12) and sensor_onoff[0][0] == 0:
-            #     cursor.execute('''UPDATE sensor SET onoff=1 WHERE onoff=0;''')
-            #     conn.commit()
-            #     t1sensor=time.perf_counter()
-         
-            # if totalsensor > 3:
-            #     cursor.execute('''UPDATE sensor SET onoff=0 WHERE onoff=1;''')
-            #     conn.commit()
-            #     t1sensor=0
-            #     t2sensor=0
-            #     totalsensor=0
+            cursor.execute('SELECT * FROM sensor')
+            sensor_onoff = cursor.fetchall() 
+            #print(sensor_onoff)
+            #print(totalsensor)
+            if sensor_onoff[0][0] == 1:
+                t2sensor=time.perf_counter()
+            if t1sensor > 0:
+                totalsensor=t2sensor-t1sensor
+            if t1sensor == 0 and sensor_onoff[0][0] == 1:
+                t1sensor=time.perf_counter()
+            if GPIO.input(12) and sensor_onoff[0][0] == 0:
+                cursor.execute('''UPDATE sensor SET onoff=1 WHERE onoff=0;''')
+                conn.commit()
+                t1sensor=time.perf_counter()
+            if GPIO.input(12) and sensor_onoff[0][0] == 1:
+                t1sensor=time.perf_counter()
+            if totalsensor > 10:
+                cursor.execute('''UPDATE sensor SET onoff=0 WHERE onoff=1;''')
+                conn.commit()
+                t1sensor=0
+                t2sensor=0
+                totalsensor=0
 
             if led_onoff[0][0] == 1:
                 print("si reconocio")
                 GPIO.output(5, True)
-                time.sleep(tiempo)
+                buzzer.start(95)
+                time.sleep(0.2)
+                buzzer.stop()
+                time.sleep(0.1)
+                buzzer.start(95)
+                time.sleep(0.2)
+                buzzer.stop()
+                time.sleep(0.1)
+                buzzer.start(95)
+                time.sleep(0.2)
+                buzzer.stop()
+                time.sleep(0.1)
                 GPIO.output(5, False)
+                buzzer.stop()
                 cursor.execute('''UPDATE led SET onoff=0 WHERE onoff=1;''')
                 conn.commit()
 
             if led_onoff[0][0]==2:
                 print("no reconocio")
                 GPIO.output(7, True)
+                buzzer.start(95)
                 time.sleep(tiempo)
+                buzzer.stop()
                 GPIO.output(7, False)
                 cursor.execute('''UPDATE led SET onoff=0 WHERE onoff=2;''')
                 conn.commit()
