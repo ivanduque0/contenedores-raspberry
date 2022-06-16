@@ -11,6 +11,9 @@ services:
       devices:
          - /dev/vchiq
          
+      command: ["input_raspicam.so -x 360 -y 240 -fps 20"]
+      #command: ["input_raspicam.so -x 640 -y 480 -fps 20"]
+         
       privileged: true
       
       restart: always
@@ -22,12 +25,12 @@ services:
          - /dev/gpiomem
 
       volumes:
-         - ~/contenedores-raspberry:/app
+         - .:/app
       
       env_file:
          - .env.pines
       
       restart: always
       
-      depends_on:
-         - stream
+      #depends_on:
+         #- stream
