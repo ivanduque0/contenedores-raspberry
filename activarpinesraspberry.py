@@ -41,7 +41,7 @@ while True:
 
             cursor.execute('SELECT * FROM led WHERE acceso=%s', (os.environ.get("ACCESO"),))
             led_onoff = cursor.fetchall()
-            cursor.execute('SELECT * FROM sensor', (os.environ.get("ACCESO"),))
+            cursor.execute('SELECT * FROM sensor WHERE acceso=%s', (os.environ.get("ACCESO"),))
             sensor_onoff = cursor.fetchall() 
             #print(sensor_onoff)
             #print(totalsensor)
