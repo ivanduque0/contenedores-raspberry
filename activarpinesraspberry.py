@@ -52,13 +52,14 @@ while True:
             if t1sensor == 0 and sensor_onoff[0][0] == 1:
                 t1sensor=time.perf_counter()
             if GPIO.input(12) and sensor_onoff[0][0] == 0:
-                cursor.execute('''UPDATE sensor SET onoff=1 WHERE onoff=0;''')
+                #el acceso depende de cual puerta se vaya a aperturar
+                cursor.execute('''UPDATE sensor SET onoff=1 WHERE acceso=1;''')
                 conn.commit()
                 t1sensor=time.perf_counter()
             if GPIO.input(12) and sensor_onoff[0][0] == 1:
                 t1sensor=time.perf_counter()
             if totalsensor > 10:
-                cursor.execute('''UPDATE sensor SET onoff=0 WHERE onoff=1;''')
+                cursor.execute('''UPDATE sensor SET onoff=0 WHERE acceso=1;''')
                 conn.commit()
                 t1sensor=0
                 t2sensor=0
@@ -82,7 +83,7 @@ while True:
                 time.sleep(0.1)
                 GPIO.output(5, False)
                 buzzer.stop()
-                cursor.execute('''UPDATE led SET onoff=0 WHERE onoff=1;''')
+                cursor.execute('''UPDATE led SET onoff=0 WHERE acceso=1;''')
                 conn.commit()
 
             if led_onoff[0][0]==2:
@@ -93,7 +94,7 @@ while True:
                 time.sleep(tiempo)
                 buzzer.stop()
                 GPIO.output(7, False)
-                cursor.execute('''UPDATE led SET onoff=0 WHERE onoff=2;''')
+                cursor.execute('''UPDATE led SET onoff=0 WHERE acceso=1;''')
                 conn.commit()
 
     except (Exception, psycopg2.Error) as error:
