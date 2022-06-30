@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 import psycopg2
 import os
+import urllib.request
 
 GPIO.cleanup()
 # Tiempo de encendido
@@ -64,7 +65,8 @@ while True:
                 totalsensor=0
 
             if led_onoff[0][0] == 1:
-                print("si reconocio")
+                #print("si reconocio")
+                urllib.request.urlopen(os.environ.get("APERTURA_ON"))
                 GPIO.output(5, True)
                 buzzer.start(95)
                 time.sleep(0.2)
@@ -84,7 +86,8 @@ while True:
                 conn.commit()
 
             if led_onoff[0][0]==2:
-                print("no reconocio")
+                #print("no reconocio")
+                urllib.request.urlopen(os.environ.get("APERTURA_OFF"))
                 GPIO.output(7, True)
                 buzzer.start(95)
                 time.sleep(tiempo)

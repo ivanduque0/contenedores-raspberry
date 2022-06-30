@@ -4,10 +4,12 @@ services:
 
    stream:
       
-      image: ivanduque0/mjpg-streamer-raspberry:v1
+      #image: ivanduque0/mjpg-streamer-raspberry:v1
+      image: ivanduque0/mjpg-streamer-raspberry:ArmV6l 
 
       ports:
          - 8080:8080
+
       devices:
          - /dev/vchiq
          
@@ -19,7 +21,8 @@ services:
       restart: always
 
    pines:
-      image: ivanduque0/pin-control-raspberry:v1
+      #image: ivanduque0/pin-control-raspberry:v1
+      image: ivanduque0/pin-control-raspberry:ArmV6l
 
       devices:
          - /dev/gpiomem
