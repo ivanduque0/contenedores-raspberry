@@ -87,7 +87,7 @@ while True:
             #     #time.sleep(0.1)
             #     #GPIO.output(5, False)
             #     #buzzer.stop()
-            #     cursor.execute('''UPDATE led SET onoff=0 WHERE acceso=%s;''', (os.environ.get("ACCESO"),))
+            #     cursor.execute('UPDATE led SET onoff=0 WHERE acceso=%s;', (os.environ.get("ACCESO"),))
             #     conn.commit()
 
             # if led_onoff[0][0]==2:
@@ -98,7 +98,7 @@ while True:
             #     # time.sleep(tiempo)
             #     # buzzer.stop()
             #     # GPIO.output(7, False)
-            #     cursor.execute('''UPDATE led SET onoff=0 WHERE acceso=%s;''', (os.environ.get("ACCESO"),))
+            #     cursor.execute('UPDATE led SET onoff=0 WHERE acceso=%s;', (os.environ.get("ACCESO"),))
             #     conn.commit()
 
     except (Exception, psycopg2.Error) as error:
