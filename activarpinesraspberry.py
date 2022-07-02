@@ -39,8 +39,8 @@ while True:
 
         while True:
 
-            cursor.execute('SELECT * FROM led WHERE acceso=%s', (os.environ.get("ACCESO"),))
-            led_onoff = cursor.fetchall()
+            # cursor.execute('SELECT * FROM led WHERE acceso=%s', (os.environ.get("ACCESO"),))
+            # led_onoff = cursor.fetchall()
             cursor.execute('SELECT * FROM sensor WHERE acceso=%s', (os.environ.get("ACCESO"),))
             sensor_onoff = cursor.fetchall() 
             #print(sensor_onoff)
@@ -65,47 +65,51 @@ while True:
                 t2sensor=0
                 totalsensor=0
 
-            if led_onoff[0][0] == 1:
-                #print("si reconocio")
-                urllib.request.urlopen(os.environ.get("APERTURA_ON"))
-                #GPIO.output(5, True)
-                #buzzer.start(95)
-                #time.sleep(0.2)
-                #buzzer.stop()
-                #time.sleep(0.1)
-                #buzzer.start(95)
-                #time.sleep(0.2)
-                #buzzer.stop()
-                #time.sleep(0.1)
-                #buzzer.start(95)
-                #time.sleep(0.2)
-                #buzzer.stop()
-                #time.sleep(0.1)
-                #GPIO.output(5, False)
-                #buzzer.stop()
-                cursor.execute('''UPDATE led SET onoff=0 WHERE acceso=%s;''', (os.environ.get("ACCESO"),))
-                conn.commit()
 
-            if led_onoff[0][0]==2:
-                #print("no reconocio")
-                urllib.request.urlopen(os.environ.get("APERTURA_OFF"))
-                # GPIO.output(7, True)
-                # buzzer.start(95)
-                # time.sleep(tiempo)
-                # buzzer.stop()
-                # GPIO.output(7, False)
-                cursor.execute('''UPDATE led SET onoff=0 WHERE acceso=%s;''', (os.environ.get("ACCESO"),))
-                conn.commit()
+            #esto se usaba cuando la raspberry activaba la puerta ya sea con uno de los pines
+            #o enviando una peticion al modulo wifi esp01
+
+            # if led_onoff[0][0] == 1:
+            #     #print("si reconocio")
+            #     urllib.request.urlopen(os.environ.get("APERTURA_ON"))
+            #     #GPIO.output(5, True)
+            #     #buzzer.start(95)
+            #     #time.sleep(0.2)
+            #     #buzzer.stop()
+            #     #time.sleep(0.1)
+            #     #buzzer.start(95)
+            #     #time.sleep(0.2)
+            #     #buzzer.stop()
+            #     #time.sleep(0.1)
+            #     #buzzer.start(95)
+            #     #time.sleep(0.2)
+            #     #buzzer.stop()
+            #     #time.sleep(0.1)
+            #     #GPIO.output(5, False)
+            #     #buzzer.stop()
+            #     cursor.execute('''UPDATE led SET onoff=0 WHERE acceso=%s;''', (os.environ.get("ACCESO"),))
+            #     conn.commit()
+
+            # if led_onoff[0][0]==2:
+            #     #print("no reconocio")
+            #     urllib.request.urlopen(os.environ.get("APERTURA_OFF"))
+            #     # GPIO.output(7, True)
+            #     # buzzer.start(95)
+            #     # time.sleep(tiempo)
+            #     # buzzer.stop()
+            #     # GPIO.output(7, False)
+            #     cursor.execute('''UPDATE led SET onoff=0 WHERE acceso=%s;''', (os.environ.get("ACCESO"),))
+            #     conn.commit()
 
     except (Exception, psycopg2.Error) as error:
         print("fallo en hacer las consultas")
         total=0
 
     finally:
+        print("se ha cerrado la conexion a la base de datos")
         if conn:
             cursor.close()
             conn.close()
-            print("se ha cerrado la conexion a la base de datos")
             GPIO.cleanup()
             total=0
             pines=0
